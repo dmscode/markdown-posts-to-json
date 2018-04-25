@@ -1,10 +1,14 @@
 {
   "name": "markdown-posts-to-json",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "将 Markdown 格式的文章（.md）后缀，提取元数据，并使用 Markdown-it 将文章内容转化为 Html，最后输出为 json 文件。",
+  "keywords":["Webpack","JavaScirpt","Markdown","JSON"],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/dmscode/markdown-posts-to-json"
+	},
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config ./webpack.conf.js --colors --profile --display-modules"
   },
   "author": "稻米鼠",
