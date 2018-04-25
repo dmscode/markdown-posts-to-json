@@ -1,0 +1,21 @@
+{
+  "name": "markdown-posts-to-json",
+  "version": "0.0.1",
+  "description": "将 Markdown 格式的文章（.md）后缀，提取元数据，并使用 Markdown-it 将文章内容转化为 Html，最后输出为 json 文件。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config ./webpack.conf.js --colors --profile --display-modules"
+  },
+  "author": "稻米鼠",
+  "license": "BSD",
+  "dependencies": {
+    "highlight.js": "^9.12.0",
+    "js-yaml": "^3.11.0",
+    "markdown-it": "^8.4.1",
+    "webpack": "^3.6.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^2.0.15"
+  }
+}
