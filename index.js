@@ -77,7 +77,7 @@ mp2j.prototype.apply = function(compiler) {
         }else{
           let postOutPath = outPath+post.replace(/\.md$/, '.json');
           // 打散文章数据
-          let postArray = postData.split(/(?:-|=){3,}\n/g);
+          let postArray = postData.split(/(?:-|=){3,}?[ \t]*?(?:\n|\r)/);
           let metas = '';
           let metaIndex = -1;
           if(postArray.length > 1){
