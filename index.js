@@ -5,15 +5,24 @@ const hljs = require("highlight.js")
 const rf = require("fs")
 const yaml = require('js-yaml')
 
-const md = new MarkdownIt();
-
+let md;
 // 合并选项对象
 function mp2j(options) {
   mp2j.options = Object.assign({
     postPath: './',
     outPath: 'posts/',
-    includeSubPath: true,
+    includeSubPath: false,
+    indexName: 'index'
   }, options);
+  let mdOptions = {}
+  for(let key in options){
+    let reg = /^mi-/
+    if(reg.test(key)){
+      let k = key.replace(/^mi-/, '');
+      mdOptions[k] = options[key];
+    }
+  }
+  md = new MarkdownIt(mdOptions);
 }
 
 // 功能函数
@@ -92,7 +101,7 @@ mp2j.prototype.apply = function(compiler) {
         // 回调结束插件工作
         if(processed >= postCount){
           postsIndex = JSON.stringify(postsMetaIndex);
-          compilation.assets[ outPath+'posts-index.json' ] = {
+          compilation.assets[ outPath+mp2j.options.indexName+'.json' ] = {
             source: function() {
               return postsIndex;
             },
