@@ -12,7 +12,8 @@ function mp2j(options) {
     postPath: './',
     outPath: 'posts/',
     includeSubPath: false,
-    indexName: 'index'
+    indexName: 'index',
+    mergeIndex2dir: true,
   }, options);
   let mdOptions = {}
   for(let key in options){
@@ -24,7 +25,26 @@ function mp2j(options) {
   }
   md = new MarkdownIt(mdOptions);
 }
-
+// 目录树分析函数
+function rTree (pathArray, now, treeObject, metas){
+  let key = pathArray[now];
+  if((now+1) === pathArray.length){
+    if(mp2j.options.mergeIndex2dir && key === 'index'){
+      Object.assign(treeObject, metas);
+    }else{
+      if( treeObject.posts == null ){
+        treeObject.posts = []
+      }
+      treeObject.posts.push(metas)
+    }
+  }else{
+    if(treeObject[key] == null){
+      treeObject[key] = {}
+    }
+    treeObject[key] = rTree (pathArray, now+1, treeObject[key], metas)
+  }
+  return treeObject;
+}
 // 功能函数
 mp2j.prototype.apply = function(compiler) {
   compiler.plugin('emit', function(compilation, callback) {
@@ -46,8 +66,7 @@ mp2j.prototype.apply = function(compiler) {
     let postCount = Object.keys(posts).length;
     let processed = 0;
 
-    let postsMetaIndex = [];
-
+    let tree = {};
     for(let post of posts){
       // 获取文件绝对地址
       let postPath = path.resolve(mp2j.options.postPath, post);
@@ -72,21 +91,20 @@ mp2j.prototype.apply = function(compiler) {
               console.log('YAML to JS maybe has an Error at '+post);
             }
           }
-          let postJson = '';
+          let postContent = '';
           if(typeof(metas) !== 'object' || metaIndex === -1){
             // 没有文章元数据
-            postJson = JSON.stringify({ content: md.render(postData) });
-            postsMetaIndex.push({ path: postOutPath });
+            metas = { path: postOutPath };
+            postContent = postData;
           }else{
-            let postContent = '';
+            Object.assign(metas, { path: postOutPath } );  
             if(metaIndex === 0){
               postContent = postData.replace(/^[\s\S]*?(-|=){3,}\n/, '')
             } else {
               postContent = postData.replace(/^([\s\S]*?(-|=){3,}\n){2}/, '')
             }
-            postJson = JSON.stringify( Object.assign({}, metas, { content: md.render(postContent) }) );
-            postsMetaIndex.push( Object.assign({}, metas, { path: postOutPath }) );
           }
+          let postJson = JSON.stringify( Object.assign({}, metas, { content: md.render(postContent) }) );
           compilation.assets[ postOutPath ] = {
             source: function() {
               return postJson;
@@ -95,12 +113,16 @@ mp2j.prototype.apply = function(compiler) {
               return postJson.length;
             }
           };
+          // 将当前文件加入文件树
+          let pathArray = post.replace(/\.md$/,'').split(/\/|\\/g);
+          tree = rTree ( pathArray, 0, tree, metas)
         }
+
         // 统计已处理文章数量
         processed++;
         // 回调结束插件工作
         if(processed >= postCount){
-          postsIndex = JSON.stringify(postsMetaIndex);
+          postsIndex = JSON.stringify(tree);
           compilation.assets[ outPath+mp2j.options.indexName+'.json' ] = {
             source: function() {
               return postsIndex;

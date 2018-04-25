@@ -5,7 +5,7 @@ Markdown posts to JSON
 
 主要是为了满足对博客文章的处理需求。
 
-同时会生成一个索引文件（JSON），内容为一个包含所有文章元数据（文章头部 YAML 格式部分）内容的数组。
+同时会生成一个索引文件（JSON），内容为一个包含所有文章元数据（文章头部 YAML 格式部分）内容的对象。对象结构与目录结构相同，并支持将 `index.md` 文件的元数据合并至它所在目录的对象中
 
 ## 使用方法：
 
@@ -23,6 +23,8 @@ Markdown posts to JSON
       includeSubPath: false,
       // name for index of JSON
       indexName: 'index',
+      // merge index.md's metadatas to its dir
+      mergeIndex2dir: true,
       // all prefix is 'mi_' keys will be remove prefix and transfered to Markdown-it. This is default option of Markdown-It
       mi_html: false,
       mi_xhtmlOut: false,
@@ -46,6 +48,9 @@ Markdown posts to JSON
 ```
 
 ## 更新日志：
+
+### 0.0.3
+优化索引文件结构
 
 ### 0.0.2
 实现了 Markdown-it 的参数传入

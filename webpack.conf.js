@@ -17,9 +17,11 @@ module.exports = {
       // output path
       outPath: 'dist/posts',
       // include sub dir
-      includeSubPath: false,
+      includeSubPath: true,
       // name for index of JSON
       indexName: 'index',
+      // merge index.md's metadatas to its dir
+      mergeIndex2dir: true,
       // all prefix is 'mi_' keys will be remove prefix and transfered to Markdown-it. This is default option of Markdown-It
       mi_html: false,
       mi_xhtmlOut: false,
