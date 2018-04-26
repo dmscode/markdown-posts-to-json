@@ -25,6 +25,8 @@ Markdown posts to JSON
       indexName: 'index',
       // merge index.md's metadatas to its dir
       mergeIndex2dir: true,
+      // sub Node's name
+      subNode: 'posts',
       // all prefix is 'mi_' keys will be remove prefix and transfered to Markdown-it. This is default option of Markdown-It
       mi_html: false,
       mi_xhtmlOut: false,
@@ -48,6 +50,9 @@ Markdown posts to JSON
 ```
 
 ## 更新日志：
+
+### 0.0.6
+修正索引文件层级问题，可以设置索引文件中子节点的名称
 
 ### 0.0.5
 分割正则优化

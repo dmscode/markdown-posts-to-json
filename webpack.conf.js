@@ -22,6 +22,8 @@ module.exports = {
       indexName: 'index',
       // merge index.md's metadatas to its dir
       mergeIndex2dir: true,
+      // sub Node's name
+      subNode: 'posts',
       // all prefix is 'mi_' keys will be remove prefix and transfered to Markdown-it. This is default option of Markdown-It
       mi_html: false,
       mi_xhtmlOut: false,

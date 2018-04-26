@@ -14,6 +14,7 @@ function mp2j(options) {
     includeSubPath: false,
     indexName: 'index',
     mergeIndex2dir: true,
+    subNode: 'posts'
   }, options);
   let mdOptions = {}
   for(let key in options){
@@ -28,20 +29,21 @@ function mp2j(options) {
 // 目录树分析函数
 function rTree (pathArray, now, treeObject, metas){
   let key = pathArray[now];
+  let subNode = mp2j.options.subNode;
+  if( treeObject[subNode] == null ){
+    treeObject[subNode] = {}
+  }
   if((now+1) === pathArray.length){
     if(mp2j.options.mergeIndex2dir && key === 'index'){
       Object.assign(treeObject, metas);
     }else{
-      if( treeObject.posts == null ){
-        treeObject.posts = []
-      }
-      treeObject.posts.push(metas)
+      treeObject[subNode][key] = metas
     }
   }else{
-    if(treeObject[key] == null){
-      treeObject[key] = {}
+    if(treeObject[subNode][key] == null){
+      treeObject[subNode][key] = {}
     }
-    treeObject[key] = rTree (pathArray, now+1, treeObject[key], metas)
+    treeObject[subNode][key] = rTree (pathArray, now+1, treeObject[subNode][key], metas)
   }
   return treeObject;
 }
