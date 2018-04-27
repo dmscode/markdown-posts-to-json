@@ -1,11 +1,8 @@
 const path = require('path')
 const glob = require("glob")
-const MarkdownIt = require("markdown-it")
-const hljs = require("highlight.js")
 const rf = require("fs")
 const yaml = require('js-yaml')
 
-let md;
 // 合并选项对象
 function mp2j(options) {
   mp2j.options = Object.assign({
@@ -16,15 +13,6 @@ function mp2j(options) {
     mergeIndex2dir: true,
     subNode: 'posts'
   }, options);
-  let mdOptions = {}
-  for(let key in options){
-    let reg = /^mi-/
-    if(reg.test(key)){
-      let k = key.replace(/^mi-/, '');
-      mdOptions[k] = options[key];
-    }
-  }
-  md = new MarkdownIt(mdOptions);
 }
 // 目录树分析函数
 function rTree (pathArray, now, treeObject, metas){
@@ -106,7 +94,7 @@ mp2j.prototype.apply = function(compiler) {
               postContent = postData.replace(/^([\s\S]*?(-|=){3,}[ \t]*(?:\n|\r)){2}/, '')
             }
           }
-          let postJson = JSON.stringify( Object.assign({}, metas, { content: md.render(postContent) }) );
+          let postJson = JSON.stringify( Object.assign({}, metas, { content: mp2j.options.md.render(postContent) }) );
           compilation.assets[ postOutPath ] = {
             source: function() {
               return postJson;

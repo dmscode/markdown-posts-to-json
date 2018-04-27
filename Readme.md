@@ -9,10 +9,19 @@ Markdown posts to JSON
 
 ## 使用方法：
 
-本插件需配合 Webpack 服用，只需在 Webpack 配置文件中如下配置即可，对于 Markdown-It 的配置，可在属性前加上 “mi_” 前缀，所有选项均非必须（但估计你不会喜欢我的默认值）
+本插件需配合 Webpack 服用，只需在 Webpack 配置文件中如下配置即可，对于 Markdown-It 的配置，可在 `md` 属性中进行配置，`md` 属性必须存在，最简设置为：`new MarkdownIt()`。其他选项均非必须（但估计你不会喜欢我的默认值）。
+
+如果需要代码高亮（按如下配置即可实现），需在页面中自行引入 `highlight.js` 的样式表，例如：`import 'highlight.js/styles/atom-one-dark.css'`
+
+## Webpack 配置
 
 ```js
-  plugins: [
+  const hljs = require("highlight.js")
+  const MarkdownIt = require("markdown-it")
+
+  ...
+
+    plugins: [
     // Markdown posts 2 json data
     new mp2j({
       // input path, your posts path
@@ -20,7 +29,7 @@ Markdown posts to JSON
       // output path
       outPath: 'dist/posts',
       // include sub dir
-      includeSubPath: false,
+      includeSubPath: true,
       // name for index of JSON
       indexName: 'index',
       // merge index.md's metadatas to its dir
@@ -28,28 +37,33 @@ Markdown posts to JSON
       // sub Node's name
       subNode: 'posts',
       // all prefix is 'mi_' keys will be remove prefix and transfered to Markdown-it. This is default option of Markdown-It
-      mi_html: false,
-      mi_xhtmlOut: false,
-      mi_breaks: false,
-      mi_langPrefix: 'language-',
-      mi_linkify: false,
-      mi_typographer: false,
-      mi_quotes: '“”‘’',
-      mi_highlight: function (str, lang) {
-        if (lang && hljs.getLanguage(lang)) {
-          try {
-            return '<pre class="hljs"><code>' +
-                  hljs.highlight(lang, str, true).value +
-                  '</code></pre>';
-          } catch (__) {}
+      md: new MarkdownIt({
+        html: false,
+        xhtmlOut: false,
+        breaks: false,
+        langPrefix: 'language-',
+        linkify: false,
+        typographer: false,
+        quotes: '“”‘’',
+        highlight: function (str, lang) {
+          if (lang && hljs.getLanguage(lang)) {
+            try {
+              return '<pre class="hljs"><code>' +
+                    hljs.highlight(lang, str, true).value +
+                    '</code></pre>';
+            } catch (__) {}
+          }
+          return '<pre class="hljs"><code>' + mp2j.options.md.utils.escapeHtml(str) + '</code></pre>';
         }
-        return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>';
-      }
+      })
     })
   ]
 ```
 
 ## 更新日志：
+
+### 0.0.8
+修改依赖引入位置，以及 Markdwon-It 选项传入方式，现在可正常实现代码高亮（需自行引入 highlight.js 的样式表）
 
 ### 0.0.7
 文章数据分割正则优化

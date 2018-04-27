@@ -1,5 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
+const hljs = require("highlight.js")
+const MarkdownIt = require("markdown-it")
 const mp2j = require('./index')
 
 module.exports = {
@@ -25,23 +27,25 @@ module.exports = {
       // sub Node's name
       subNode: 'posts',
       // all prefix is 'mi_' keys will be remove prefix and transfered to Markdown-it. This is default option of Markdown-It
-      mi_html: false,
-      mi_xhtmlOut: false,
-      mi_breaks: false,
-      mi_langPrefix: 'language-',
-      mi_linkify: false,
-      mi_typographer: false,
-      mi_quotes: '“”‘’',
-      mi_highlight: function (str, lang) {
-        if (lang && hljs.getLanguage(lang)) {
-          try {
-            return '<pre class="hljs"><code>' +
-                  hljs.highlight(lang, str, true).value +
-                  '</code></pre>';
-          } catch (__) {}
+      md: new MarkdownIt({
+        html: false,
+        xhtmlOut: false,
+        breaks: false,
+        langPrefix: 'language-',
+        linkify: false,
+        typographer: false,
+        quotes: '“”‘’',
+        highlight: function (str, lang) {
+          if (lang && hljs.getLanguage(lang)) {
+            try {
+              return '<pre class="hljs"><code>' +
+                    hljs.highlight(lang, str, true).value +
+                    '</code></pre>';
+            } catch (__) {}
+          }
+          return '<pre class="hljs"><code>' + mp2j.options.md.utils.escapeHtml(str) + '</code></pre>';
         }
-        return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>';
-      }
+      })
     })
   ]
 }
