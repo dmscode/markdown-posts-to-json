@@ -62,6 +62,9 @@ Markdown posts to JSON
 
 ## 更新日志：
 
+### 0.0.9
+支持使用 parent 设置父节点，支持多个根节点。
+
 ### 0.0.8
 修改依赖引入位置，以及 Markdwon-It 选项传入方式，现在可正常实现代码高亮（需自行引入 highlight.js 的样式表）
 

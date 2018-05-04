@@ -64,3 +64,6 @@ typings/
 # Test dir
 dist/
 posts/
+
+# entry.js
+entry-just-for-try.js

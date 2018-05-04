@@ -104,6 +104,11 @@ mp2j.prototype.apply = function(compiler) {
             }
           };
           // 将当前文件加入文件树
+          if(metas.parent === "" || metas.parent === undefined){
+            post = (post.substr(0, 1) === "/" ? "default" : "default/") + post
+          }else{
+            post = metas.parent.replace(/\/$/, "")+"/"+post.replace(/^.*\//, "")
+          }
           let pathArray = post.replace(/\.md$/,'').split(/\/|\\/g);
           tree = rTree ( pathArray, 0, tree, metas)
         }
@@ -112,6 +117,7 @@ mp2j.prototype.apply = function(compiler) {
         processed++;
         // 回调结束插件工作
         if(processed >= postCount){
+          tree = tree.posts;
           postsIndex = JSON.stringify(tree);
           compilation.assets[ outPath+mp2j.options.indexName+'.json' ] = {
             source: function() {
