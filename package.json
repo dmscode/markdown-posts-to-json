@@ -14,7 +14,7 @@
   "author": "稻米鼠",
   "license": "BSD",
   "dependencies": {
-    "highlight.js": "^9.12.0",
+    "highlight.js": "^10.1.2",
     "js-yaml": "^3.11.0",
     "markdown-it": "^8.4.1",
     "webpack": "^3.6.0"
